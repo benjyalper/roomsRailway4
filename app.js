@@ -17,25 +17,31 @@ const pool = new Pool({
     },
 });
 
+// Initialize the pool when the application starts
+process.on('SIGTERM', () => {
+    pool.end(() => {
+        console.log('Database pool has been closed.');
+        process.exit(0);
+    });
+});
+
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 3000;
 
-pool.query('SELECT NOW()', (err, res) => {
-    console.log(err, res);
-    pool.end();
-});
-
+// Middleware for parsing request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 
+// Serve static files from the 'public' directory
 app.use(express.static('public'));
 
-app.get('/public/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+// Test the database connection
+pool.query('SELECT NOW()', (err, res) => {
+    console.log(err, res);
 });
 
 // Express route to submit date, names, and color
@@ -62,11 +68,12 @@ app.post('/submit', async (req, res) => {
 
         res.status(200).send('סידור חדרים עודכן בהצלחה.');
     } catch (error) {
-        console.error(error);
+        console.error('Error handling submit data:', error);
         res.status(500).send('Internal Server Error');
     }
 });
 
+// Express route to delete an entry
 app.delete('/deleteEntry', async (req, res) => {
     const { roomNumber, startTime } = req.query;
 

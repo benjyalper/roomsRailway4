@@ -7,7 +7,7 @@ import moment from 'moment';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const pkg = require('pg');
+import pkg from 'pg';
 const { Pool } = pkg;
 
 const pool = new Pool({

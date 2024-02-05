@@ -59,7 +59,7 @@ app.post('/submit', async (req, res) => {
         const client = await pool.connect();
         try {
             await client.query(
-                'INSERT INTO selected_dates (selected_date, names, color, startTime, endTime, roomNumber) VALUES ($1, $2, $3, $4, $5, $6)',
+                'INSERT INTO rooms (selected_date, names, color, startTime, endTime, roomNumber) VALUES ($1, $2, $3, $4, $5, $6)',
                 [selectedDate, names, selectedColor, startTime, endTime, roomNumber]
             );
         } finally {
@@ -86,7 +86,7 @@ app.delete('/deleteEntry', async (req, res) => {
         const client = await pool.connect();
 
         // Execute a DELETE query in your database
-        await client.query('DELETE FROM selected_dates WHERE roomNumber = $1 AND startTime = $2', [roomNumber, startTime]);
+        await client.query('DELETE FROM rooms WHERE roomNumber = $1 AND startTime = $2', [roomNumber, startTime]);
 
         client.release();
 
@@ -104,11 +104,11 @@ app.get('/room/:roomNumber', async (req, res) => {
     try {
         // Retrieve room schedule data from MySQL database
         const client = await pool.connect();
-        const [roomRows] = await client.query('SELECT * FROM selected_dates WHERE roomNumber = $1', [roomNumber]);
+        const [roomRows] = await client.query('SELECT * FROM rooms WHERE roomNumber = $1', [roomNumber]);
 
         // Fetch data for today
         const nowMoment = moment().format('YYYY-MM-DD');
-        const [dateRows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = $1', [nowMoment]);
+        const [dateRows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms WHERE selected_date = $1', [nowMoment]);
 
         client.release();
 
@@ -129,7 +129,7 @@ app.get('/fetchDataByDate', async (req, res) => {
         const lookupDate = req.query.date || moment().format('YYYY-MM-DD');
 
         const client = await pool.connect();
-        const [rows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = $1', [lookupDate]);
+        const [rows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms WHERE selected_date = $1', [lookupDate]);
         client.release();
 
         if (rows.length > 0) {
@@ -149,7 +149,7 @@ app.get('/dateData', async (req, res) => {
         const nowMoment = moment().format('YYYY-MM-DD');
 
         const client = await pool.connect();
-        const [rows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = $1', [nowMoment]);
+        const [rows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms WHERE selected_date = $1', [nowMoment]);
         client.release();
 
         if (rows.length > 0) {
@@ -176,7 +176,7 @@ app.post('/therapist-form', async (req, res) => {
         const client = await pool.connect();
         try {
             await client.query(
-                'INSERT INTO selected_dates ( roomNumber, startTime, endTime) VALUES ($1, $2, $3)',
+                'INSERT INTO rooms ( roomNumber, startTime, endTime) VALUES ($1, $2, $3)',
                 [roomNumber, startTime, endTime]
             );
         } finally {
@@ -200,7 +200,7 @@ app.post('/deleteRow', async (req, res) => {
         const client = await pool.connect();
         try {
             // Delete the row from the database
-            await client.query('DELETE FROM selected_dates WHERE roomNumber = $1 AND startTime = $2 AND endTime = $3', [roomNumber, startTime, endTime]);
+            await client.query('DELETE FROM rooms WHERE roomNumber = $1 AND startTime = $2 AND endTime = $3', [roomNumber, startTime, endTime]);
             res.json({ success: true });
         } finally {
             client.release();

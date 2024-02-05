@@ -4,7 +4,8 @@ import bodyParser from 'body-parser';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import moment from 'moment';
-import { Pool } from 'pg';
+const pkg = require('pg');
+const { Pool } = pkg;
 // Import dotenv and configure it to load variables from .env
 import dotenv from 'dotenv';
 dotenv.config();

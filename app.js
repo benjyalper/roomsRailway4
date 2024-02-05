@@ -96,14 +96,14 @@ app.get('/room/:roomNumber', async (req, res) => {
 
     try {
         // Retrieve room schedule data from MySQL database
-        const connection = await pool.getConnection();
-        const [roomRows] = await connection.execute('SELECT * FROM selected_dates WHERE roomNumber = $1', [roomNumber]);
+        const client = await pool.connect();
+        const [roomRows] = await client.query('SELECT * FROM selected_dates WHERE roomNumber = $1', [roomNumber]);
 
         // Fetch data for today
         const nowMoment = moment().format('YYYY-MM-DD');
-        const [dateRows] = await connection.execute('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = $1', [nowMoment]);
+        const [dateRows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = $1', [nowMoment]);
 
-        connection.release();
+        client.release();
 
         // Render the room EJS template with the room schedule and date data
         res.render('room', { roomNumber, therapist_name: roomRows, data: dateRows });
@@ -121,9 +121,9 @@ app.get('/fetchDataByDate', async (req, res) => {
     try {
         const lookupDate = req.query.date || moment().format('YYYY-MM-DD');
 
-        const connection = await pool.getConnection();
-        const [rows] = await connection.execute('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = $1', [lookupDate]);
-        connection.release();
+        const client = await pool.connect();
+        const [rows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = $1', [lookupDate]);
+        client.release();
 
         if (rows.length > 0) {
             res.json(rows);
@@ -141,9 +141,9 @@ app.get('/dateData', async (req, res) => {
     try {
         const nowMoment = moment().format('YYYY-MM-DD');
 
-        const connection = await pool.getConnection();
-        const [rows] = await connection.execute('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = $1', [nowMoment]);
-        connection.release();
+        const client = await pool.connect();
+        const [rows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = $1', [nowMoment]);
+        client.release();
 
         if (rows.length > 0) {
             // res.json(rows);
@@ -166,14 +166,14 @@ app.post('/therapist-form', async (req, res) => {
         const { therapistName, roomNumber, startTime, endTime, selectedDate } = formData;
 
 
-        const connection = await pool.getConnection();
+        const connection = await pool.connect();
         try {
-            await connection.execute(
+            await client.query(
                 'INSERT INTO selected_dates ( roomNumber, startTime, endTime) VALUES ($1, $2, $3)',
                 [roomNumber, startTime, endTime]
             );
         } finally {
-            connection.release();
+            client.release();
         }
 
         console.log('Data inserted into the database:', formData);

@@ -1,22 +1,29 @@
 // Import necessary modules
 import express from 'express';
 import bodyParser from 'body-parser';
-import pkg from 'pg';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import moment from 'moment';
+import { Pool } from 'pg';
+// Import dotenv and configure it to load variables from .env
+import dotenv from 'dotenv';
+dotenv.config();
 
-const { Pool } = pkg;
-const app = express();
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const port = process.env.PORT || 3000;
 
-// Create a PostgreSQL connection pool
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false,
     },
+});
+
+const app = express();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const port = process.env.PORT || 3000;
+
+pool.query('SELECT NOW()', (err, res) => {
+    console.log(err, res);
+    pool.end();
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));

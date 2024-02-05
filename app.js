@@ -166,7 +166,7 @@ app.post('/therapist-form', async (req, res) => {
         const { therapistName, roomNumber, startTime, endTime, selectedDate } = formData;
 
 
-        const connection = await pool.connect();
+        const client = await pool.connect();
         try {
             await client.query(
                 'INSERT INTO selected_dates ( roomNumber, startTime, endTime) VALUES ($1, $2, $3)',
@@ -190,13 +190,13 @@ app.post('/deleteRow', async (req, res) => {
         const { roomNumber, startTime, endTime } = req.body;
         console.log({ roomNumber, startTime, endTime })
 
-        const connection = await pool.getConnection();
+        const client = await pool.connect();
         try {
             // Delete the row from the database
-            await connection.execute('DELETE FROM selected_dates WHERE roomNumber = $1 AND startTime = $2 AND endTime = $3', [roomNumber, startTime, endTime]);
+            await client.query('DELETE FROM selected_dates WHERE roomNumber = $1 AND startTime = $2 AND endTime = $3', [roomNumber, startTime, endTime]);
             res.json({ success: true });
         } finally {
-            connection.release();
+            client.release();
         }
     } catch (error) {
         console.error('Error deleting row from the database:', error);

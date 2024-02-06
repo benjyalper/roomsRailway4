@@ -129,7 +129,7 @@ app.get('/fetchDataByDate', async (req, res) => {
         const lookupDate = req.query.date || moment().format('YYYY-MM-DD');
 
         const client = await pool.connect();
-        const [rows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms_scheduler WHERE selected_date = $1', [lookupDate]);
+        const { rows } = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms_scheduler WHERE selected_date = $1', [lookupDate]);
         console.log(rows);
 
         client.release();
@@ -137,13 +137,15 @@ app.get('/fetchDataByDate', async (req, res) => {
         if (rows.length > 0) {
             res.json(rows);
         } else {
-            res.status(404).json({ error: 'No data found for the specified date.' });
+            // If no data is found, send an empty array as the response
+            res.json([]);
         }
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 // Express route to fetch all data for today
 app.get('/dateData', async (req, res) => {

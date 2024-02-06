@@ -5,7 +5,7 @@ $(document).ready(function () {
         const room = $(this).closest('.room');
         currentRoomNumber = $(room).data('room-number');
         console.log(currentRoomNumber)
-        // window.location.href = 'https://rooms-scheduler-65113cf9659f.herokuapp.com/room/' + currentRoomNumber;
+        window.location.href = 'https://rooms-scheduler-65113cf9659f.herokuapp.com/room/' + currentRoomNumber;
     });
 
     $('.back-btn').click(function () {

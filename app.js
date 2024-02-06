@@ -130,6 +130,8 @@ app.get('/fetchDataByDate', async (req, res) => {
 
         const client = await pool.connect();
         const [rows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms_scheduler WHERE selected_date = $1', [lookupDate]);
+        console.log(rows);
+
         client.release();
 
         if (rows.length > 0) {

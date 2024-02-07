@@ -5,19 +5,19 @@ $(document).ready(function () {
         const room = $(this).closest('.room');
         currentRoomNumber = $(room).data('room-number');
         console.log(currentRoomNumber)
-        window.location.href = '/room/' + currentRoomNumber;
+        window.location.href = 'https://rooms-scheduler-65113cf9659f.herokuapp.com/room/' + currentRoomNumber;
     });
 
     $('.back-btn').click(function () {
-        window.location.href = 'http://localhost:3000/';
+        window.location.href = 'https://rooms-scheduler-65113cf9659f.herokuapp.com/';
     });
 
     $('.now').click(function () {
-        window.location.href = '/dateData/';
+        window.location.href = 'https://rooms-scheduler-65113cf9659f.herokuapp.com/dateData/';
     });
 
     $('.room-schedule-link').click(function () {
-        window.location.href = '/room-schedule.html';
+        window.location.href = 'https://rooms-scheduler-65113cf9659f.herokuapp.com/room-schedule.html';
     });
 
     // $('.room-form-link').click(function () {
@@ -25,11 +25,11 @@ $(document).ready(function () {
     // });
 
     $('.drop-down-to-room-form-link').click(function () {
-        window.location.href = '/room-form.html';
+        window.location.href = 'https://rooms-scheduler-65113cf9659f.herokuapp.com/room-form.html';
     });
 
     $('.cat-link').click(function () {
-        window.location.href = '/cat.html';
+        window.location.href = 'https://rooms-scheduler-65113cf9659f.herokuapp.com/cat.html';
     });
 
     $('.cat').on('click', function () {
@@ -52,7 +52,7 @@ async function submitDate() {
     const endTime = $('#endTime').val();
     const roomNumber = $('#roomNumber').val();
 
-    const response = await fetch('/submit', {
+    const response = await fetch('https://rooms-scheduler-65113cf9659f.herokuapp.com/submit', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -71,11 +71,10 @@ async function submitDate() {
 // Function to fetch data by date
 async function fetchDataByDate() {
     const lookupDate = $('#lookupDate').val() || moment().format('YYYY-MM-DD');
-    console.log(lookupDate)
 
     try {
         const encodedDate = encodeURIComponent(lookupDate);
-        const response = await fetch(`/fetchDataByDate?date=${encodedDate}`);
+        const response = await fetch(`https://rooms-scheduler-65113cf9659f.herokuapp.com/fetchDataByDate?date=${encodedDate}`);
         const results = await response.json();
 
         if (results.length > 0) {
@@ -126,12 +125,12 @@ async function fetchDataByDate() {
                         fetchDataByDate()
                     } else {
                         // Redirect to room form
-                        window.location.href = `/room-form.html`;
+                        window.location.href = `https://rooms-scheduler-65113cf9659f.herokuapp.com/room-form.html`;
                     }
 
                     async function deleteEntry(roomNumber, startTime) {
                         try {
-                            const response = await fetch(`/deleteEntry?roomNumber=${roomNumber}&startTime=${startTime}`, {
+                            const response = await fetch(`https://rooms-scheduler-65113cf9659f.herokuapp.com/deleteEntry?roomNumber=${roomNumber}&startTime=${startTime}`, {
                                 method: 'DELETE',
                             });
 
@@ -145,16 +144,16 @@ async function fetchDataByDate() {
 
 
             // Display retrieved data
-            // const displayResults = results.map(result => `
-            //     <p>Names: ${result.names}</p>
-            //     <p>Color: ${result.color}</p>
-            //     <p>Start Time: ${result.startTime}</p>
-            //     <p>selected Time: ${result.startTime}</p>
-            //     <p>End Time: ${result.endTime}</p>
-            //     <p>therapist name: ${result.names}</p>
-            //     <p>room number: ${result.roomNumber}</p>
-            //     <hr>
-            // `).join('');
+            const displayResults = results.map(result => `
+                <p>Names: ${result.names}</p>
+                <p>Color: ${result.color}</p>
+                <p>Start Time: ${result.startTime}</p>
+                <p>selected Time: ${result.startTime}</p>
+                <p>End Time: ${result.endTime}</p>
+                <p>therapist name: ${result.names}</p>
+                <p>room number: ${result.roomNumber}</p>
+                <hr>
+            `).join('');
 
 
 
@@ -173,7 +172,7 @@ async function dateData() {
 
     try {
         const encodedDate = encodeURIComponent(nowMoment);
-        const response = await fetch(`/dateData?date=${encodedDate}`);
+        const response = await fetch(`https://rooms-scheduler-65113cf9659f.herokuapp.com/dateData?date=${encodedDate}`);
         const results = await response.json();
         console.log(nowMoment.names)
 
@@ -211,7 +210,7 @@ $(document).ready(function () {
 async function deleteColoredCells(roomNumber, startTime, endTime) {
     try {
         // Make a server-side request to delete the corresponding row from the database
-        const response = await fetch('/deleteRow', {
+        const response = await fetch('https://rooms-scheduler-65113cf9659f.herokuapp.com/deleteRow', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -290,7 +289,7 @@ async function deleteCellsAndRow(roomNumber, startTime, endTime) {
     // Perform deletion logic here, e.g., make a server-side request to delete the data
 
     try {
-        const response = await fetch('/deleteCellsAndRow', {
+        const response = await fetch('https://rooms-scheduler-65113cf9659f.herokuapp.com/deleteCellsAndRow', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

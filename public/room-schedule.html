@@ -19,8 +19,7 @@
 
             <h1 style="font-size: 28px;">סידור חדרים</h1>
             <div>
-                <input type="date" id="lookupDate" value="<%= new Date().toISOString().split('T')[0] %>"
-                    onchange="fetchDataByDate()">
+                <input type="date" id="lookupDate" onchange="fetchDataByDate()">
                 <label for="lookupDate">בחר/י תאריך:</label>
             </div>
             <div id="lookupResult" style="display: none;"></div>

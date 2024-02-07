@@ -8,8 +8,6 @@ import { fileURLToPath } from 'url';
 import moment from 'moment';
 import dotenv from 'dotenv';
 dotenv.config();
-import pkg from 'pg';
-const { Pool } = pkg;
 
 // const pool = mysql.createPool({
 //     host: 'localhost',
@@ -21,33 +19,23 @@ const { Pool } = pkg;
 //     queueLimit: 0
 // });
 
+import pkg from 'pg';
+const { Pool } = pkg;
+
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost', // or your PostgreSQL server host
-    database: 'rooms',
-    password: 'Ag1ag1ag1$',
-    port: 5432, // default PostgreSQL port
-    max: 10, // maximum number of clients in the pool
-    idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false,
+    },
 });
 
-// import pkg from 'pg';
-// const { Pool } = pkg;
-
-// const pool = new Pool({
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: {
-//         rejectUnauthorized: false,
-//     },
-// });
-
 // Initialize the pool when the application starts
-// process.on('SIGTERM', () => {
-//     pool.end(() => {
-//         console.log('Database pool has been closed.');
-//         process.exit(0);
-//     });
-// });
+process.on('SIGTERM', () => {
+    pool.end(() => {
+        console.log('Database pool has been closed.');
+        process.exit(0);
+    });
+});
 
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -128,12 +116,11 @@ app.get('/room/:roomNumber', async (req, res) => {
     try {
         // Retrieve room schedule data from MySQL database
         const client = await pool.connect();
-        const roomRows = await client.query('SELECT * FROM rooms_scheduler WHERE roomNumber = $1', [roomNumber]);
-        console.log('Room Rows:', roomRows, typeof roomRows);
+        const [roomRows] = await client.query('SELECT * FROM rooms_scheduler WHERE roomNumber = $1', [roomNumber]);
 
         // Fetch data for today
         const nowMoment = moment().format('YYYY-MM-DD');
-        const dateRows = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms_scheduler WHERE selected_date = $1', [nowMoment]);
+        const [dateRows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms_scheduler WHERE selected_date = $1', [nowMoment]);
 
         client.release();
 

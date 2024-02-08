@@ -5,19 +5,19 @@ $(document).ready(function () {
         const room = $(this).closest('.room');
         currentRoomNumber = $(room).data('room-number');
         console.log(currentRoomNumber)
-        window.location.href = '/room/' + currentRoomNumber;
+        window.location.href = 'https://united-park-386203.ew.r.appspot.com/room/' + currentRoomNumber;
     });
 
     $('.back-btn').click(function () {
-        window.location.href = 'http://localhost:3000/';
+        window.location.href = 'https://united-park-386203.ew.r.appspot.com/';
     });
 
     $('.now').click(function () {
-        window.location.href = '/dateData/';
+        window.location.href = 'https://united-park-386203.ew.r.appspot.com//dateData/';
     });
 
     $('.room-schedule-link').click(function () {
-        window.location.href = '/room-schedule.html';
+        window.location.href = 'https://united-park-386203.ew.r.appspot.com//room-schedule.html';
     });
 
     // $('.room-form-link').click(function () {
@@ -25,11 +25,11 @@ $(document).ready(function () {
     // });
 
     $('.drop-down-to-room-form-link').click(function () {
-        window.location.href = '/room-form.html';
+        window.location.href = 'https://united-park-386203.ew.r.appspot.com//room-form.html';
     });
 
     $('.cat-link').click(function () {
-        window.location.href = '/cat.html';
+        window.location.href = 'https://united-park-386203.ew.r.appspot.com//cat.html';
     });
 
     $('.cat').on('click', function () {
@@ -75,7 +75,7 @@ async function fetchDataByDate() {
 
     try {
         const encodedDate = encodeURIComponent(lookupDate);
-        const response = await fetch(`/fetchDataByDate?date=${encodedDate}`);
+        const response = await fetch(`https://united-park-386203.ew.r.appspot.com/fetchDataByDate?date=${encodedDate}`);
         const results = await response.json();
 
         if (results.length > 0) {
@@ -142,20 +142,6 @@ async function fetchDataByDate() {
                     }
                 });
             });
-
-
-            // Display retrieved data
-            // const displayResults = results.map(result => `
-            //     <p>Names: ${result.names}</p>
-            //     <p>Color: ${result.color}</p>
-            //     <p>Start Time: ${result.startTime}</p>
-            //     <p>selected Time: ${result.startTime}</p>
-            //     <p>End Time: ${result.endTime}</p>
-            //     <p>therapist name: ${result.names}</p>
-            //     <p>room number: ${result.roomNumber}</p>
-            //     <hr>
-            // `).join('');
-
 
 
         } else {
@@ -304,24 +290,4 @@ async function deleteCellsAndRow(roomNumber, startTime, endTime) {
         console.error('Error deleting cells and row:', error);
     }
 }
-
-
-// Function to check who is in the room now
-// async function whosHereNow() {
-//     try {
-//         // Make a server-side request to check room occupancy
-//         const response = await fetch('/isRoomOccupied');
-//         const occupancyInfo = await response.json();
-
-//         if (occupancyInfo.isOccupied) {
-//             console.log(`Room is occupied by ${occupancyInfo.occupiedName} now.`);
-//         } else {
-//             console.log('Room is not occupied.');
-//         }
-//     } catch (error) {
-//         console.error('Error checking room occupancy:', error);
-//     }
-// }
-
-
 

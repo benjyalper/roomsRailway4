@@ -1,0 +1,8 @@
+runtime: nodejs18
+env_variables:
+  MYSQL_USER: 'root'
+  MYSQL_PASSWORD: 'Ag1ag1ag1$'
+  MYSQL_HOST: '/cloudsql/united-park-386203:europe-west1:rooms1234'
+  MYSQL_DATABASE: 'rooms1234'
+
+

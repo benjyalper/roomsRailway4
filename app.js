@@ -1,71 +1,51 @@
-//app.js back up
-
 // Import necessary modules
 import express from 'express';
 import bodyParser from 'body-parser';
+import mysql from 'mysql2/promise'; // Use the promise version of mysql2
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import moment from 'moment';
-import dotenv from 'dotenv';
-dotenv.config();
-import pkg from 'pg';
-const { Pool } = pkg;
 
-// const pool = mysql.createPool({
-//     host: 'localhost',
-//     user: 'root',
-//     password: 'Ag1ag1ag1$',
-//     database: 'wishdatabase',
-//     waitForConnections: true,
-//     connectionLimit: 10,
-//     queueLimit: 0
-// });
 
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost', // or your PostgreSQL server host
-    database: 'rooms',
-    password: 'Ag1ag1ag1$',
-    port: 5432, // default PostgreSQL port
-    max: 10, // maximum number of clients in the pool
-    idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
-});
-
-// import pkg from 'pg';
-// const { Pool } = pkg;
-
-// const pool = new Pool({
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: {
-//         rejectUnauthorized: false,
-//     },
-// });
-
-// Initialize the pool when the application starts
-// process.on('SIGTERM', () => {
-//     pool.end(() => {
-//         console.log('Database pool has been closed.');
-//         process.exit(0);
-//     });
-// });
 
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 3000;
 
-// Middleware for parsing request bodies
+// Create a MySQL connection pool
+// const pool = mysql.createPool({
+//     host: 'localhost',
+//     user: 'root',
+//     password: 'Ag1ag1ag1$',
+//     database: 'wishDatabase',
+//     waitForConnections: true,
+//     connectionLimit: 10,
+//     queueLimit: 0,
+// });
+
+const pool = mysql.createPool({
+    user: 'root',
+    password: 'Ag1ag1ag1$',
+    database: 'rooms1234',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+    socketPath: '/cloudsql/united-park-386203:europe-west1:rooms1234',
+});
+
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 
-// Serve static files from the 'public' directory
 app.use(express.static('public'));
 
-// Test the database connection
-pool.query('SELECT NOW()', (err, res) => {
-    console.log(err, res);
+app.get('/public/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
 });
 
 // Express route to submit date, names, and color
@@ -73,31 +53,25 @@ app.post('/submit', async (req, res) => {
     try {
         const selectedDate = req.body.selectedDate;
         const names = req.body.names;
-        const selectedColor = req.body.selectedColor;
+        const selectedColor = req.body.selectedColor; // Get the selected color
         const startTime = req.body.startTime;
         const endTime = req.body.endTime;
         const roomNumber = req.body.roomNumber;
 
         // Validate inputs (if needed)
 
-        const client = await pool.connect();
-        try {
-            await client.query(
-                'INSERT INTO rooms_scheduler (selected_date, names, color, startTime, endTime, roomNumber) VALUES ($1, $2, $3, $4, $5, $6)',
-                [selectedDate, names, selectedColor, startTime, endTime, roomNumber]
-            );
-        } finally {
-            client.release();
-        }
+        const connection = await pool.getConnection();
+        await connection.execute('INSERT INTO selected_dates (selected_date, names, color, startTime, endTime, roomNumber) VALUES (?, ?, ?, ?, ?, ?)', [selectedDate, names, selectedColor, startTime, endTime, roomNumber]);
+        connection.release();
 
         res.status(200).send('סידור חדרים עודכן בהצלחה.');
+        alert("hello")
     } catch (error) {
-        console.error('Error handling submit data:', error);
+        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });
 
-// Express route to delete an entry
 app.delete('/deleteEntry', async (req, res) => {
     const { roomNumber, startTime } = req.query;
 
@@ -107,35 +81,34 @@ app.delete('/deleteEntry', async (req, res) => {
     }
 
     try {
-        const client = await pool.connect();
+        const connection = await pool.getConnection();
 
         // Execute a DELETE query in your database
-        await client.query('DELETE FROM rooms_scheduler WHERE roomNumber = $1 AND startTime = $2', [roomNumber, startTime]);
+        await connection.execute('DELETE FROM selected_dates WHERE roomNumber = ? AND startTime = ?', [roomNumber, startTime]);
 
-        client.release();
+        connection.release();
 
         return res.sendStatus(200); // OK status for successful deletion
     } catch (error) {
         console.error('Error deleting entry from the database:', error);
         return res.status(500).send('Internal Server Error');
     }
-});
 
+});
 
 app.get('/room/:roomNumber', async (req, res) => {
     const roomNumber = req.params.roomNumber;
 
     try {
         // Retrieve room schedule data from MySQL database
-        const client = await pool.connect();
-        const roomRows = await client.query('SELECT * FROM rooms_scheduler WHERE roomNumber = $1', [roomNumber]);
-        console.log('Room Rows:', roomRows, typeof roomRows);
+        const connection = await pool.getConnection();
+        const [roomRows] = await connection.execute('SELECT * FROM selected_dates WHERE roomNumber = ?', [roomNumber]);
 
         // Fetch data for today
         const nowMoment = moment().format('YYYY-MM-DD');
-        const dateRows = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms_scheduler WHERE selected_date = $1', [nowMoment]);
+        const [dateRows] = await connection.execute('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = ?', [nowMoment]);
 
-        client.release();
+        connection.release();
 
         // Render the room EJS template with the room schedule and date data
         res.render('room', { roomNumber, therapist_name: roomRows, data: dateRows });
@@ -153,17 +126,14 @@ app.get('/fetchDataByDate', async (req, res) => {
     try {
         const lookupDate = req.query.date || moment().format('YYYY-MM-DD');
 
-        const client = await pool.connect();
-        const { rows } = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms_scheduler WHERE selected_date = $1', [lookupDate]);
-        console.log(rows);
-
-        client.release();
+        const connection = await pool.getConnection();
+        const [rows] = await connection.execute('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = ?', [lookupDate]);
+        connection.release();
 
         if (rows.length > 0) {
             res.json(rows);
         } else {
-            // If no data is found, send an empty array as the response
-            res.json([]);
+            res.status(404).json({ error: 'No data found for the specified date.' });
         }
     } catch (error) {
         console.error(error);
@@ -171,15 +141,14 @@ app.get('/fetchDataByDate', async (req, res) => {
     }
 });
 
-
 // Express route to fetch all data for today
 app.get('/dateData', async (req, res) => {
     try {
         const nowMoment = moment().format('YYYY-MM-DD');
 
-        const client = await pool.connect();
-        const [rows] = await client.query('SELECT names, color, startTime, endTime, roomNumber FROM rooms_scheduler WHERE selected_date = $1', [nowMoment]);
-        client.release();
+        const connection = await pool.getConnection();
+        const [rows] = await connection.execute('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = ?', [nowMoment]);
+        connection.release();
 
         if (rows.length > 0) {
             // res.json(rows);
@@ -202,14 +171,14 @@ app.post('/therapist-form', async (req, res) => {
         const { therapistName, roomNumber, startTime, endTime, selectedDate } = formData;
 
 
-        const client = await pool.connect();
+        const connection = await pool.getConnection();
         try {
-            await client.query(
-                'INSERT INTO rooms_scheduler ( roomNumber, startTime, endTime) VALUES ($1, $2, $3)',
+            await connection.execute(
+                'INSERT INTO selected_dates ( roomNumber, startTime, endTime) VALUES (?, ?, ?)',
                 [roomNumber, startTime, endTime]
             );
         } finally {
-            client.release();
+            connection.release();
         }
 
         console.log('Data inserted into the database:', formData);
@@ -226,13 +195,13 @@ app.post('/deleteRow', async (req, res) => {
         const { roomNumber, startTime, endTime } = req.body;
         console.log({ roomNumber, startTime, endTime })
 
-        const client = await pool.connect();
+        const connection = await pool.getConnection();
         try {
             // Delete the row from the database
-            await client.query('DELETE FROM rooms_scheduler WHERE roomNumber = $1 AND startTime = $2 AND endTime = $3', [roomNumber, startTime, endTime]);
+            await connection.execute('DELETE FROM selected_dates WHERE roomNumber = ? AND startTime = ? AND endTime = ?', [roomNumber, startTime, endTime]);
             res.json({ success: true });
         } finally {
-            client.release();
+            connection.release();
         }
     } catch (error) {
         console.error('Error deleting row from the database:', error);

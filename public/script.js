@@ -1,7 +1,7 @@
 $(document).ready(function () {
     let currentRoomNumber;
 
-    $('.door').on('click', function () {
+    $('.room').on('click', function () {
         const room = $(this).closest('.room');
         currentRoomNumber = $(room).data('room-number');
         console.log(currentRoomNumber)

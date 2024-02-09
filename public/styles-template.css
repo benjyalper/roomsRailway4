@@ -11,7 +11,7 @@
 
 .navbar1 {
     background-color: rgb(241, 249, 239);
-    width: 31vw;
+    width: calc(31vw + 120px);
     margin-top: 20px;
     display: flex;
     justify-content: right;
@@ -35,8 +35,8 @@
 
 .background-container {
     background-image: url('/room-image.png');
-    height: 80vh;
-    width: 31vw;
+    height: calc(80vh + 120px);
+    width: calc(31vw + 120px);
     /* Center the background image both horizontally and vertically */
     background-repeat: no-repeat;
     display: flex;

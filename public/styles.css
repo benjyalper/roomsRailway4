@@ -12,8 +12,8 @@ body {
     background-color: rgb(241, 249, 239);
     /* width: 45vw; */
     margin-top: 20px;
-    display: flex;
-    justify-content: right;
+    /* display: flex;
+    justify-content: right; */
     color: rgb(135, 192, 155);
 }
 
@@ -26,7 +26,7 @@ body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    grid-gap: 10px;
+    grid-gap: 1rem;
     background-color: rgb(241, 249, 239);
     /* Gap between rooms */
     /* max-width: 700px; */
@@ -34,37 +34,47 @@ body {
     /* max-height: 300px; */
 }
 
-@media (max-width: 700px) {
+@media (max-width: 650px) {
     .room-grid {
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-rows: repeat(4, 1fr) !important;
+    }
+}
+
+@media (max-width: 500px) {
+    .room-grid {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: repeat(8, 1fr) !important;
     }
 }
 
 .room {
     background-color: #fff;
-    padding: 20px;
     border-radius: 5px;
     border: 1px solid #ccc;
     text-align: center;
     position: relative;
+    height: 22rem;
+    width: 22rem;
+    background-image: url('/door_image.png');
+    background-size: cover;
 }
 
 
 .room-number {
     position: absolute;
-    top: 31%;
-    left: 50%;
+    top: 6rem;
+    left: 11rem;
     transform: translate(-50%, -50%);
     margin: 0;
     font-size: 24px;
     color: rgb(53, 50, 135);
 }
 
-.door {
-    height: 300px;
-}
+/* .door {
+    height: 15rem;
+} */
 
-.door:hover {
+.room:hover {
     cursor: pointer;
 }

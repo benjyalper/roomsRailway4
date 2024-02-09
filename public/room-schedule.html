@@ -21,9 +21,35 @@
             <div>
                 <input type="date" id="lookupDate" onchange="fetchDataByDate()">
                 <label for="lookupDate">בחר/י תאריך:</label>
+
             </div>
             <div id="lookupResult" style="display: none;"></div>
+            <nav class="navbar navbar1">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                    aria-label="Toggle navigation" style="margin-left: 10px;">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active room-schedule-link" href="#" aria-current="page">סידור
+                                חדרים</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active drop-down-to-room-form-link" href="#"
+                                aria-current="page">עריכה</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active cat-link" href="#" aria-current="page">הודעות</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
             <button class="back-btn"><i class="fa fa-home fa-2x" aria-hidden="true"></i></button>
+
 
         </nav>
 

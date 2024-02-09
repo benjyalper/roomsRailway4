@@ -16,12 +16,13 @@
 
     <body>
         <% function isCurrentTimeInRange(startTime, endTime) { %>
-        <% const now = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }); %>
+        <% const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' })); %>
         <% const start = parseTime(startTime); %>
         <% const end = parseTime(endTime); %>
 
         <% return now >= start && now <= end; %>
         <% } %>
+
 
         <% function parseTime(timeString) { %>
         <% const parts = timeString.split(':'); %>

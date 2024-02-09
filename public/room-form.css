@@ -4,7 +4,7 @@ body {
     align-items: center;
 }
 
-.navbar1 {
+/* .navbar1 {
     background-color: #f1f9ef;
     width: 30vw;
     display: flex;
@@ -12,7 +12,20 @@ body {
     gap: 22%;
     padding: 10px;
     color: #87c09b;
+} */
+
+.navbar-room-schedule {
+    background-color: rgb(241, 249, 239);
+    /* change */
+    width: 500px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10%;
+    padding: 10px;
+    color: rgb(135, 192, 155);
 }
+
 
 .back-btn {
     /* Style the back button as needed */
@@ -22,7 +35,8 @@ body {
     padding: 5px;
     color: rgb(135, 192, 155);
     border-color: rgb(5, 239, 107);
-
+    height: 50px;
+    margin-right: 5px;
     /* Add your custom styles here */
 }
 
@@ -36,7 +50,7 @@ body {
     background-color: rgb(162, 234, 217);
     padding-bottom: 20px;
     color: rgb(38, 81, 53);
-    width: fit-content;
+    width: 500px;
 }
 
 form {

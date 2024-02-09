@@ -6,13 +6,14 @@ body {
     background-color: #f0f0f0;
 }
 
-.navbar1 {
+.navbar-room-schedule {
     background-color: rgb(241, 249, 239);
-    width: 59vw;
+    /* change */
+    /* width: 59vw; */
     margin-top: 20px;
     display: flex;
-    justify-content: space-evenly;
-    gap: 20%;
+    justify-content: right;
+    gap: 10%;
     padding: 10px;
     color: rgb(135, 192, 155);
 }
@@ -35,8 +36,8 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(9, 6rem);
-    grid-template-rows: repeat(25, 4rem);
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(25, 1fr);
     grid-gap: 0;
     padding: 20px;
     background-color: aliceblue;
@@ -56,6 +57,8 @@ body {
 
 .cell {
     border: 1px solid black;
+    /* change */
+    height: 3rem;
 }
 
 .cell:hover {

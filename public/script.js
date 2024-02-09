@@ -177,7 +177,7 @@ async function dateData() {
 
 // Function to check if the current time is within a specified range
 function isCurrentTimeInRange(startTime, endTime) {
-    const now = new Date();
+    const now = new Date.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' });
 
     const [startHours, startMinutes, startSeconds] = startTime.split(':').map(Number);
     const startDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHours, startMinutes, startSeconds);

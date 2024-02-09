@@ -16,7 +16,7 @@
 
     <body>
         <% function isCurrentTimeInRange(startTime, endTime) { %>
-        <% const now = new Date(); %>
+        <% const now = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }); %>
         <% const start = parseTime(startTime); %>
         <% const end = parseTime(endTime); %>
 
@@ -45,7 +45,8 @@
             </nav>
             <div class="background-container">
                 <div class="calendar-container">
-                    <div class="calender-item"><%= new Date().toLocaleString() %></div>
+                    <div class="calender-item"><%= new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }) %>
+                    </div>
                     <div>
                         <!-- Display data for today -->
                         <% let therapistAvailable = false; %>

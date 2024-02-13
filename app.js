@@ -13,26 +13,15 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 3000;
 
 // Create a MySQL connection pool
-// const pool = mysql.createPool({
-//     host: 'localhost',
-//     user: 'root',
-//     password: 'Ag1ag1ag1$',
-//     database: 'wishDatabase',
-//     waitForConnections: true,
-//     connectionLimit: 10,
-//     queueLimit: 0,
-// });
-
 const pool = mysql.createPool({
-    user: 'root',
+    host: 'database-1.cdo2qwkw8yqi.eu-north-1.rds.amazonaws.com',
+    user: 'Benjyalper',
     password: 'Ag1ag1ag1$',
-    database: 'rooms1234',
+    database: 'database-1',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-    socketPath: '/cloudsql/united-park-386203:europe-west1:rooms1234',
 });
-
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -48,29 +37,64 @@ app.get('/public/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
+// const checkDatabaseConnection = async (req, res, next) => {
+//     try {
+//         // Attempt to acquire a connection from the pool
+//         const connection = await pool.getConnection();
+//         connection.release(); // Release the connection back to the pool
+//         console.log("db connection")
+//         // If the code reaches here, the database connection is successful
+//         next();
+//     } catch (error) {
+//         console.error('Database connection error:', error);
+//         res.status(500).send('Database connection error');
+//     }
+// };
+
+// app.use(checkDatabaseConnection);
+// Express route to submit date, names, and color
 // Express route to submit date, names, and color
 app.post('/submit', async (req, res) => {
     try {
         const selectedDate = req.body.selectedDate;
         const names = req.body.names;
-        const selectedColor = req.body.selectedColor; // Get the selected color
+        const selectedColor = req.body.selectedColor;
         const startTime = req.body.startTime;
         const endTime = req.body.endTime;
         const roomNumber = req.body.roomNumber;
+        const recurringEvent = req.body.recurringEvent || false;
 
         // Validate inputs (if needed)
 
         const connection = await pool.getConnection();
-        await connection.execute('INSERT INTO selected_dates (selected_date, names, color, startTime, endTime, roomNumber) VALUES (?, ?, ?, ?, ?, ?)', [selectedDate, names, selectedColor, startTime, endTime, roomNumber]);
-        connection.release();
+        await connection.beginTransaction();
 
-        res.status(200).send('סידור חדרים עודכן בהצלחה.');
-        alert("hello")
+        try {
+            // Insert the main event
+            await connection.execute('INSERT INTO selected_dates (selected_date, names, color, startTime, endTime, roomNumber, recurringEvent) VALUES (?, ?, ?, ?, ?, ?, ?)', [selectedDate, names, selectedColor, startTime, endTime, roomNumber, recurringEvent]);
+
+            if (recurringEvent) {
+                // Insert the recurring events for the next 4 weeks (adjust as needed)
+                for (let i = 1; i <= 4; i++) {
+                    const nextDate = moment(selectedDate).add(i, 'weeks').format('YYYY-MM-DD');
+                    await connection.execute('INSERT INTO selected_dates (selected_date, names, color, startTime, endTime, roomNumber, recurringEvent) VALUES (?, ?, ?, ?, ?, ?, ?)', [nextDate, names, selectedColor, startTime, endTime, roomNumber, recurringEvent]);
+                }
+            }
+
+            await connection.commit();
+            res.status(200).send('סידור חדרים עודכן בהצלחה.');
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            connection.release();
+        }
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 app.delete('/deleteEntry', async (req, res) => {
     const { roomNumber, startTime } = req.query;
@@ -210,6 +234,6 @@ app.post('/deleteRow', async (req, res) => {
 });
 
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on http://0.0.0.0:${port}`);
 });

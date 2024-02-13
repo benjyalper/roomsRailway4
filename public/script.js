@@ -1,23 +1,24 @@
 $(document).ready(function () {
     let currentRoomNumber;
 
+
     $('.room').on('click', function () {
         const room = $(this).closest('.room');
         currentRoomNumber = $(room).data('room-number');
         console.log(currentRoomNumber)
-        window.location.href = 'https://united-park-386203.ew.r.appspot.com/room/' + currentRoomNumber;
+        window.location.href = '/room/' + currentRoomNumber;
     });
 
     $('.back-btn').click(function () {
-        window.location.href = 'https://united-park-386203.ew.r.appspot.com/';
+        window.location.href = 'http://rooms.eu-north-1.elasticbeanstalk.com/';
     });
 
     $('.now').click(function () {
-        window.location.href = 'https://united-park-386203.ew.r.appspot.com//dateData/';
+        window.location.href = '/dateData/';
     });
 
     $('.room-schedule-link').click(function () {
-        window.location.href = 'https://united-park-386203.ew.r.appspot.com//room-schedule.html';
+        window.location.href = '/room-schedule.html';
     });
 
     // $('.room-form-link').click(function () {
@@ -25,11 +26,11 @@ $(document).ready(function () {
     // });
 
     $('.drop-down-to-room-form-link').click(function () {
-        window.location.href = 'https://united-park-386203.ew.r.appspot.com//room-form.html';
+        window.location.href = '/room-form.html';
     });
 
     $('.cat-link').click(function () {
-        window.location.href = 'https://united-park-386203.ew.r.appspot.com//cat.html';
+        window.location.href = '/cat.html';
     });
 
     $('.cat').on('click', function () {
@@ -51,44 +52,48 @@ async function submitDate() {
     const startTime = $('#startTime').val();
     const endTime = $('#endTime').val();
     const roomNumber = $('#roomNumber').val();
+    const recurringEvent = $('#recurringEvent').is(':checked');
 
     const response = await fetch('/submit', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ selectedDate, names, selectedColor, startTime, endTime, roomNumber }),
+        body: JSON.stringify({ selectedDate, names, selectedColor, startTime, endTime, roomNumber, recurringEvent }),
     });
 
     const result = await response.text();
     $('#message').text(result);
 
     // Log the submitted data to the console
-    console.log(`Submitted Date: ${selectedDate}, Names: ${names}, Color: ${selectedColor}, Start Time: ${startTime}, End Time: ${endTime}, Room Number: ${roomNumber}`);
+    console.log(`Submitted Date: ${selectedDate}, Names: ${names}, Color: ${selectedColor}, Start Time: ${startTime}, End Time: ${endTime}, Room Number: ${roomNumber}, Recurring Event: ${recurringEvent}`);
 }
 
 
 // Function to fetch data by date
 async function fetchDataByDate() {
-    const lookupDate = $('#lookupDate').val() || moment().format('YYYY-MM-DD');
-    console.log(lookupDate)
 
+    const lookupDate = $('#lookupDate').val() || moment().format('YYYY-MM-DD');
+    $('#lookupDate').val($('#lookupDate').val() || moment().format('YYYY-MM-DD'));
+    // console.log(lookupDate)
     try {
+
         const encodedDate = encodeURIComponent(lookupDate);
-        const response = await fetch(`https://united-park-386203.ew.r.appspot.com/fetchDataByDate?date=${encodedDate}`);
+        const response = await fetch(`/fetchDataByDate?date=${encodedDate}`);
         const results = await response.json();
 
+
+        // Clear the grid cells before updating
+        $('.grid-cell').css({
+            'background-color': 'white',
+            'border': '1px solid black',  // Reset the border
+        });
+
+        $('.frame').css({
+            'background-color': 'rgb(235, 237, 236)'
+        });
+
         if (results.length > 0) {
-            // Clear the grid cells before updating
-            $('.grid-cell').css({
-                'background-color': 'white',
-                'border': '1px solid black',  // Reset the border
-            });
-
-            $('.frame').css({
-                'background-color': 'rgb(235, 237, 236)'
-            });
-
             // Iterate through the results and update the grid cells
             results.forEach(result => {
                 const cell = $(`.grid-cell[data-room-hour="${result.roomNumber} ${result.startTime}"]`);
@@ -193,9 +198,9 @@ async function dateData() {
 
 
 // Other functions and code in your script.js file
-$(document).ready(function () {
-    $('#lookupDate').val(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }).slice(0, 10));
-});
+// $(document).ready(function () {
+//     $('#lookupDate').val(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }).slice(0, 10));
+// });
 
 // Function to delete colored cells and corresponding row from the database
 async function deleteColoredCells(roomNumber, startTime, endTime) {

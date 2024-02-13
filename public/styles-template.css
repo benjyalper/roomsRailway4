@@ -1,5 +1,8 @@
 /* Body styles */
 .container-lg {
+    /* check */
+    /* width: calc(31vw + 120px); */
+    height: 100vh;
     margin-top: 20px;
     background-color: rgb(210, 243, 232);
     padding: 20px;
@@ -15,7 +18,7 @@
     margin-top: 20px;
     display: flex;
     justify-content: right;
-    gap: 30%;
+    gap: 33%;
     padding: 10px;
     color: rgb(135, 192, 155);
 }
@@ -35,6 +38,7 @@
 
 .background-container {
     background-image: url('/room-image.png');
+    background-size: cover;
     height: calc(80vh + 120px);
     width: calc(31vw + 120px);
     /* Center the background image both horizontally and vertically */

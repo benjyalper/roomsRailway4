@@ -227,3 +227,28 @@ body {
     color: #ff0000;
     /* Red color for delete text */
 }
+
+@media (max-width: 450px) {
+
+    .navbar-room-schedule {
+        background-color: rgb(241, 249, 239);
+        /* change */
+        /* width: 59vw; */
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 10px;
+        color: rgb(135, 192, 155);
+    }
+
+    h1 {
+        margin-left: 50px !important;
+        font-size: 20px !important;
+    }
+
+    .back-btn {
+        margin-left: 300px;
+    }
+
+}

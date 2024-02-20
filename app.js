@@ -5,7 +5,29 @@ import mysql from 'mysql2/promise'; // Use the promise version of mysql2
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import moment from 'moment';
+import dotenv from 'dotenv';
+dotenv.config();
 
+// Create a connection to the database using the promise version
+const connection = await mysql.createConnection({
+    host: 'database-1.cdo2qwkw8yqi.eu-north-1.rds.amazonaws.com',
+    user: 'Benjyalper',
+    password: 'Ag1ag1ag1$', // replace with your actual password
+    database: 'selected_dates',
+});
+
+try {
+    console.log('Connected to the database');
+
+    // Simple test query
+    const [results, fields] = await connection.execute('SELECT * FROM selected_dates');
+    console.log('Query results:', results);
+} catch (error) {
+    console.error('Error executing query:', error);
+} finally {
+    // Close the database connection
+    await connection.end();
+}
 
 
 const app = express();
@@ -13,15 +35,29 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 3000;
 
 // Create a MySQL connection pool
+// const pool = mysql.createPool({
+//     host: 'database-1.cdo2qwkw8yqi.eu-north-1.rds.amazonaws.com',
+//     user: 'Benjyalper',
+//     password: 'Ag1ag1ag1$',
+//     database: 'selected_dates',
+//     waitForConnections: true,
+//     connectionLimit: 10,
+//     queueLimit: 0,
+// });
+
+
+
+
 const pool = mysql.createPool({
-    host: 'database-1.cdo2qwkw8yqi.eu-north-1.rds.amazonaws.com',
-    user: 'Benjyalper',
-    password: 'Ag1ag1ag1$',
-    database: 'database-1',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
 });
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

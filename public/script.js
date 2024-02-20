@@ -10,7 +10,7 @@ $(document).ready(function () {
     });
 
     $('.back-btn').click(function () {
-        window.location.href = 'http://rooms.eu-north-1.elasticbeanstalk.com/';
+        window.location.href = '/';
     });
 
     $('.now').click(function () {

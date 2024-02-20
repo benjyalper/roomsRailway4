@@ -3,6 +3,8 @@
 
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <title>Room <%= roomNumber %> - Schedule</title>
         <link rel="stylesheet" href="/styles-template.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -47,8 +49,10 @@
             </nav>
             <div class="background-container">
                 <div class="calendar-container">
-                    <div class="calender-item"><%= new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }) %>
+                    <div class="calendar-item">
+                        <%= new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem', hour12: true, hour: 'numeric', minute: 'numeric' }) %>
                     </div>
+
                     <div>
                         <!-- Display data for today -->
                         <% let therapistAvailable = false; %>

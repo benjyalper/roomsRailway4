@@ -251,8 +251,9 @@ body {
         margin-left: 300px;
     }
 
-    .navbar-collapse {
-        margin-right: 300px !important;
-        background-color: #04f630 !important;
+    .navbar-toggler {
+        margin-right: 330px !important;
     }
+
+
 }

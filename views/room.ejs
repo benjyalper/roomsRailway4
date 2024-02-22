@@ -3,8 +3,6 @@
 
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
         <title>Room <%= roomNumber %> - Schedule</title>
         <link rel="stylesheet" href="/styles-template.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -14,7 +12,6 @@
         <!-- Include Moment.js -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     </head>
-
 
     <body>
         <% function isCurrentTimeInRange(startTime, endTime) { %>
@@ -30,10 +27,9 @@
         <% const parts = timeString.split(':'); %>
         <% const hours = parseInt(parts[0], 10); %>
         <% const minutes = parseInt(parts[1], 10); %>
-        <% const seconds = parseInt(parts[2], 10); %>
-
+        <!-- Remove seconds since they are not needed -->
         <% const result = new Date(); %>
-        <% result.setHours(hours, minutes, seconds); %>
+        <% result.setHours(hours, minutes); %>
 
         <% return result; %>
         <% } %>
@@ -49,16 +45,17 @@
             </nav>
             <div class="background-container">
                 <div class="calendar-container">
-                    <div class="calendar-item">
+                    <div class="calender-item">
                         <%= new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem', hour12: true, hour: 'numeric', minute: 'numeric' }) %>
                     </div>
-
                     <div>
                         <!-- Display data for today -->
                         <% let therapistAvailable = false; %>
                         <% data.forEach(row => { %>
                         <% if (row.roomNumber === roomNumber && isCurrentTimeInRange(row.startTime, row.endTime)) { %>
-                        <span style="color: green;"><%= row.names %> בטיפול עד <%= row.endTime %></span>
+                        <!-- Format endTime to display only hours and minutes -->
+                        <span style="color: green;"><%= row.names %> בטיפול עד
+                            <%= parseTime(row.endTime).toLocaleTimeString('he-IL', { hour12: true, hour: 'numeric', minute: 'numeric' }) %></span>
                         <% therapistAvailable = true; %>
                         <% } %>
                         <% }); %>
@@ -69,8 +66,6 @@
                 </div>
             </div>
         </div>
-
-
 
         <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> -->
         <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js'></script>

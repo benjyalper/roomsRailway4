@@ -10,7 +10,7 @@ $(document).ready(function () {
     });
 
     $('.back-btn').click(function () {
-        window.location.href = '/';
+        window.location.href = '/home.html';
     });
 
     $('.now').click(function () {

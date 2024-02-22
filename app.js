@@ -132,7 +132,7 @@ app.get('/room/:roomNumber', async (req, res) => {
 
     try {
         // Retrieve room schedule data from MySQL database
-        const connection = pool.getConnection();
+        const connection = await pool.getConnection();
         const [roomRows] = await connection.execute('SELECT * FROM selected_dates WHERE roomNumber = ?', [roomNumber]);
 
         // Fetch data for today
@@ -157,7 +157,7 @@ app.get('/fetchDataByDate', async (req, res) => {
     try {
         const lookupDate = req.query.date || moment().format('YYYY-MM-DD');
 
-        const connection = pool.getConnection();
+        const connection = await pool.getConnection();
         const [rows] = await connection.execute('SELECT names, color, startTime, endTime, roomNumber FROM selected_dates WHERE selected_date = ?', [lookupDate]);
         connection.release();
 

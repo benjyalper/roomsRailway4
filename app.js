@@ -21,18 +21,18 @@ const connection = await mysql.createConnection({
     database: 'selected_dates',
 });
 
-try {
-    console.log('Connected to the database');
+// try {
+//     console.log('Connected to the database');
 
-    // Simple test query
-    const [results, fields] = await connection.execute('SELECT * FROM selected_dates');
-    console.log('Query results:', results);
-} catch (error) {
-    console.error('Error executing query:', error);
-} finally {
-    // Close the database connection
-    await connection.end();
-}
+//     // Simple test query
+//     const [results, fields] = await connection.execute('SELECT * FROM selected_dates');
+//     console.log('Query results:', results);
+// } catch (error) {
+//     console.error('Error executing query:', error);
+// } finally {
+//     // Close the database connection
+//     await connection.end();
+// }
 
 
 // Create a MySQL connection pool

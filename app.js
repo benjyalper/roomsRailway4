@@ -1,5 +1,6 @@
 // Import necessary modules
 import express from 'express';
+// import session from 'express-session';
 import bodyParser from 'body-parser';
 import mysql from 'mysql2/promise'; // Use the promise version of mysql2
 import { dirname } from 'path';
@@ -7,6 +8,10 @@ import { fileURLToPath } from 'url';
 import moment from 'moment';
 import dotenv from 'dotenv';
 dotenv.config();
+
+const app = express();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const port = process.env.PORT || 3000;
 
 // Create a connection to the database using the promise version
 const connection = await mysql.createConnection({
@@ -29,10 +34,6 @@ try {
     await connection.end();
 }
 
-
-const app = express();
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const port = process.env.PORT || 3000;
 
 // Create a MySQL connection pool
 // const pool = mysql.createPool({
@@ -58,7 +59,7 @@ const pool = mysql.createPool({
     queueLimit: 0,
 });
 
-
+// app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -73,22 +74,19 @@ app.get('/public/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-// const checkDatabaseConnection = async (req, res, next) => {
-//     try {
-//         // Attempt to acquire a connection from the pool
-//         const connection = await pool.getConnection();
-//         connection.release(); // Release the connection back to the pool
-//         console.log("db connection")
-//         // If the code reaches here, the database connection is successful
-//         next();
-//     } catch (error) {
-//         console.error('Database connection error:', error);
-//         res.status(500).send('Database connection error');
-//     }
-// };
+app.post('/signin', (req, res) => {
+    const { username, password } = req.body;
 
-// app.use(checkDatabaseConnection);
-// Express route to submit date, names, and color
+    // For simplicity, validate against hardcoded values (replace this with a database check)
+    if (username === 'benjyalper' && password === 'Ag1ag1ag1$') {
+        // req.session.user = username; // Store user in session
+        res.redirect('/home.html'); // Redirect to dashboard or any other page
+    } else {
+        res.redirect('/index.html')
+    }
+});
+
+
 // Express route to submit date, names, and color
 app.post('/submit', async (req, res) => {
     try {

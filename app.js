@@ -14,39 +14,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 3000;
 
 // Create a connection to the database using the promise version
-const connection = await mysql.createConnection({
-    host: 'database-1.cdo2qwkw8yqi.eu-north-1.rds.amazonaws.com',
-    user: 'Benjyalper',
-    password: 'Ag1ag1ag1$', // replace with your actual password
-    database: 'selected_dates',
-});
-
-// try {
-//     console.log('Connected to the database');
-
-//     // Simple test query
-//     const [results, fields] = await connection.execute('SELECT * FROM selected_dates');
-//     console.log('Query results:', results);
-// } catch (error) {
-//     console.error('Error executing query:', error);
-// } finally {
-//     // Close the database connection
-//     await connection.end();
-// }
-
-
-// Create a MySQL connection pool
-// const pool = mysql.createPool({
+// const connection = await mysql.createConnection({
 //     host: 'database-1.cdo2qwkw8yqi.eu-north-1.rds.amazonaws.com',
 //     user: 'Benjyalper',
-//     password: 'Ag1ag1ag1$',
+//     password: 'Ag1ag1ag1$', // replace with your actual password
 //     database: 'selected_dates',
-//     waitForConnections: true,
-//     connectionLimit: 10,
-//     queueLimit: 0,
 // });
-
-
 
 
 const pool = mysql.createPool({

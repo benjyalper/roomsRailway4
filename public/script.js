@@ -1,7 +1,6 @@
 $(document).ready(function () {
     let currentRoomNumber;
 
-
     $('.room').on('click', function () {
         const room = $(this).closest('.room');
         currentRoomNumber = $(room).data('room-number');
@@ -21,10 +20,6 @@ $(document).ready(function () {
         window.location.href = '/room-schedule.html';
     });
 
-    // $('.room-form-link').click(function () {
-    //     window.location.href = '/room-form.html';
-    // });
-
     $('.drop-down-to-room-form-link').click(function () {
         window.location.href = '/room-form.html';
     });
@@ -37,12 +32,13 @@ $(document).ready(function () {
         alert("חתלתוללללל....!");
     });
 
-});
-
-$(document).ready(function () {
     fetchDataByDate();
-});
 
+    // Update end time options when start time changes
+    $('#startTime').on('change', function () {
+        updateEndTimeOptions();
+    });
+});
 
 // Function to submit date
 async function submitDate() {
@@ -67,6 +63,29 @@ async function submitDate() {
 
     // Log the submitted data to the console
     console.log(`Submitted Date: ${selectedDate}, Names: ${names}, Color: ${selectedColor}, Start Time: ${startTime}, End Time: ${endTime}, Room Number: ${roomNumber}, Recurring Event: ${recurringEvent}`);
+
+    // Update end time options based on the selected start time
+    updateEndTimeOptions();
+}
+
+// Function to update end time options based on the selected start time
+function updateEndTimeOptions() {
+    const startTime = $('#startTime').val();
+    const endTimeSelect = $('#endTime');
+
+    // Clear existing options
+    endTimeSelect.empty();
+
+    // Assuming you have a fixed set of available end times, adjust as needed
+    const availableEndTimes = ['08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00'];
+
+    // Filter available end times based on the selected start time
+    const filteredEndTimes = availableEndTimes.filter(endTime => moment(endTime, 'HH:mm').isAfter(moment(startTime, 'HH:mm')));
+
+    // Append new options to the select element
+    filteredEndTimes.forEach(endTime => {
+        endTimeSelect.append($('<option>', { value: endTime, text: endTime }));
+    });
 }
 
 

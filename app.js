@@ -45,6 +45,10 @@ async function executeSQLScript() {
     }
 }
 
+// Execute the SQL script for creating the table
+executeSQLScript(__dirname + '/create_table.sql');
+
+
 // Create a connection to the database using the promise version
 // const connection = await mysql.createConnection({
 //     host: 'database-1.cdo2qwkw8yqi.eu-north-1.rds.amazonaws.com',

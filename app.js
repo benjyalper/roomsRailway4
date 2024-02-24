@@ -12,26 +12,26 @@ dotenv.config();
 
 
 
-// Create a connection to the database using the promise version
-const connection = await mysql.createConnection({
-    host: 'roundhouse.proxy.rlwy.net',
-    user: 'root',
-    password: 'bg5Da-GC1aA5B1bDCCAf1bd3b65Gg2a6', // replace with your actual password
-    database: 'railway',
-});
+// // Create a connection to the database using the promise version
+// const connection = await mysql.createConnection({
+//     host: 'roundhouse.proxy.rlwy.net',
+//     user: 'root',
+//     password: 'bg5Da-GC1aA5B1bDCCAf1bd3b65Gg2a6', // replace with your actual password
+//     database: 'railway',
+// });
 
-try {
-    console.log('Connected to the database');
+// try {
+//     console.log('Connected to the database');
 
-    // Simple test query
-    const [results, fields] = await connection.execute('SELECT * FROM selected_dates');
-    console.log('Query results:', results);
-} catch (error) {
-    console.error('Error executing query:', error);
-} finally {
-    // Close the database connection
-    await connection.end();
-}
+//     // Simple test query
+//     const [results, fields] = await connection.execute('SELECT * FROM selected_dates');
+//     console.log('Query results:', results);
+// } catch (error) {
+//     console.error('Error executing query:', error);
+// } finally {
+//     // Close the database connection
+//     await connection.end();
+// }
 
 
 const app = express();

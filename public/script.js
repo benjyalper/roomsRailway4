@@ -149,8 +149,7 @@ async function fetchDataByDate() {
                         deleteEntry(result.roomNumber, result.startTime);
                         fetchDataByDate()
                     } else {
-                        // Redirect to room form
-                        window.location.href = `/room-form.html`;
+                        console.log("No changes made to schedule");
                     }
 
                     async function deleteEntry(roomNumber, startTime) {

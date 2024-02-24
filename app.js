@@ -7,11 +7,43 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import moment from 'moment';
 import dotenv from 'dotenv';
+import fs from 'fs/promises'; // Import the 'fs' module for file operations
 dotenv.config();
 
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 3000;
+
+async function executeSQLScript() {
+    try {
+        // Read the SQL script file
+        const sqlScript = await fs.readFile('create_table.sql', 'utf-8');
+
+        // Create a connection to the database using the promise version
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+        });
+
+        // Check if the table already exists
+        const [existingTables] = await connection.query("SHOW TABLES LIKE 'selected_dates'");
+
+        if (existingTables.length === 0) {
+            // Execute the SQL script if the table doesn't exist
+            await connection.query(sqlScript);
+            console.log('Table created successfully.');
+        } else {
+            console.log('Table already exists.');
+        }
+
+        // Close the database connection
+        await connection.end();
+    } catch (error) {
+        console.error('Error executing SQL script:', error);
+    }
+}
 
 // Create a connection to the database using the promise version
 // const connection = await mysql.createConnection({

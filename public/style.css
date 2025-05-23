@@ -1,0 +1,313 @@
+/* style.css */
+/* Calm Sea Palette & Soft Styling */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+    --sea-deep: #247794;
+    --sea-medium: #018594;
+    --sea-lightBlue: #d3f8fc;
+    --sea-light: #efede3;
+    --white: #ffffff;
+    --gray-light: #f7f7f8;
+    --gray: #e0e0e0;
+    --text-dark: #2E3A3F;
+
+    /* Fixed header heights */
+    --navbar-height: 56px;
+    --heading-height: 48px;
+    --date-height: 56px;
+
+    /* Time-column width */
+    --time-col-width: 80px;
+}
+
+/* ─── Global ───────────────────────────────────────────────────── */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--gray-light);
+    color: var(--text-dark);
+    margin: 0;
+    padding-top: var(--navbar-height);
+}
+
+/* ─── Page Banner ───────────────────────────────────────────────── */
+.page-banner {
+    background: var(--sea-light);
+    color: var(--sea-deep);
+    padding: .75rem 1rem;
+    height: 56px;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+
+/* ─── Navbar ───────────────────────────────────────────────────── */
+.calm-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--sea-lightBlue) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: .5rem 1rem;
+    z-index: 3000;
+    font-weight: 500;
+}
+
+.calm-navbar .navbar-brand i,
+.calm-navbar .nav-link {
+    color: var(--sea-deep) !important;
+}
+
+.calm-navbar .nav-link:hover {
+    color: var(--sea-light) !important;
+}
+
+/* ─── Form (Sign-In) ───────────────────────────────────────────── */
+.form-container {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: auto;
+}
+
+/* ─── Clinic Logo between navbar and banner ───────────────────────── */
+
+
+
+.form-container input::placeholder {
+    text-align: right;
+}
+
+/* ─── Home Grid ───────────────────────────────────────────────── */
+#room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+#room-grid .room {
+    background: url('/images/newRoom.png') center/contain no-repeat var(--white);
+    height: 140px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    position: relative;
+    cursor: pointer;
+    transition: transform .2s;
+}
+
+#room-grid .room:hover {
+    transform: translateY(-3px);
+}
+
+#room-grid .room-number {
+    position: absolute;
+    top: calc(15% + 3px);
+    left: calc(50% - 7px);
+    transform: translateX(-50%);
+    font-weight: 600;
+    font-size: .88rem;
+    background-color: rgba(173, 216, 230, 0.3);
+    padding: 2px 6px;
+    border-radius: 5px;
+}
+
+/* ─── Page Title & Date Row ───────────────────────────────────── */
+.container h1 {
+    background: var(--sea-light);
+    color: var(--sea-deep);
+    padding: .5rem 1rem;
+    margin: 0;
+    text-align: center;
+    font-size: 1.2rem;
+    height: var(--heading-height);
+    line-height: calc(var(--heading-height) - 1rem);
+}
+
+.container .mb-3 {
+    padding: .5rem 1rem;
+    background: var(--white);
+    margin: 0 0 1rem 0;
+    height: var(--date-height);
+    line-height: calc(var(--date-height) - 1rem);
+}
+
+@media (max-width: 768px) {
+    .container h1 {
+        position: fixed;
+        top: var(--navbar-height);
+        left: 0;
+        right: 0;
+        z-index: 10;
+    }
+
+    .container .mb-3 {
+        position: fixed;
+        top: calc(var(--navbar-height) + var(--heading-height));
+        left: 0;
+        right: 0;
+        z-index: 10;
+    }
+}
+
+/* ─── Schedule Wrapper ─────────────────────────────────────────── */
+.schedule-wrapper {
+    position: relative;
+    max-height: calc(100vh - var(--navbar-height) - var(--heading-height) - var(--date-height));
+    overflow: auto;
+    /* both axes */
+    -webkit-overflow-scrolling: touch;
+    /* inherit RTL from page */
+}
+
+/* ─── Schedule Table ───────────────────────────────────────────── */
+#scheduleTable {
+    border-collapse: collapse;
+    width: max-content;
+    /* intrinsic width */
+}
+
+/* ─── Header row & body time-labels base styling ───────────────── */
+#scheduleTable thead th,
+#scheduleTable tbody th {
+    background: var(--sea-medium);
+    color: var(--white);
+    padding: .75rem .5rem;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid var(--gray);
+}
+
+/* room header cells (no extra overrides) */
+#scheduleTable thead th.room-col {}
+
+/* ─── Sticky body time-labels (vertical axis) ─────────────────── */
+#scheduleTable tbody th.time-col {
+    position: sticky;
+    /* float horizontally */
+    right: 0;
+    /* stick to right edge */
+    z-index: 2;
+    /* beneath header corner */
+    background: var(--sea-medium);
+    min-width: var(--time-col-width);
+}
+
+/* ─── Sticky header row (horizontal axis) ────────────────────── */
+#scheduleTable thead th {
+    position: sticky;
+    /* float vertically */
+    top: 0;
+    /* stick to top */
+    z-index: 3;
+    /* above body time-labels */
+}
+
+/* ─── Corner cell (top-right in RTL layout) ──────────────────── */
+/* ADDED: reuse thead .time-col as your “blank” corner */
+#scheduleTable thead th.time-col {
+    position: sticky;
+    /* float to top-right */
+    top: 0;
+    right: 0;
+    z-index: 4;
+    /* highest layer */
+    background: var(--sea-light);
+    /* match your banner/heading bg */
+    width: var(--time-col-width);
+    /* same as your hour-column width */
+}
+
+/* ─── Body Cells ───────────────────────────────────────────────── */
+/* ─── Body Cells ───────────────────────────────────────────────── */
+#scheduleTable td.grid-cell {
+    background: var(--white);
+    min-width: 120px;
+    height: 40px;
+    /* keep cells at exactly 40px tall */
+    border: 1px solid var(--gray);
+    overflow: hidden;
+    /* hide any text that spills past 40px */
+    position: relative;
+}
+
+
+/* ─── Body Cells (hover effect) ───────────────────────────────── */
+
+#scheduleTable td.grid-cell:hover {
+    background: var(--sea-lightBlue);
+    cursor: pointer;
+}
+
+/* therapist name inside each cell */
+/* ─── Therapist Name Wrapping in fixed-height cells ───────────────── */
+.therapist-name {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 500;
+
+    /* wrap long names inside the 40px cell */
+    white-space: normal;
+    /* allow line breaks */
+    word-break: break-word;
+    /* break long words */
+    overflow-wrap: break-word;
+    /* extra wrap support */
+    text-align: center;
+    /* keep it centered */
+    width: calc(100% - 8px);
+    /* give some horizontal padding */
+    line-height: 1.1;
+    /* tighten lines so up to 2 lines fit */
+}
+
+
+/* ─── Home Grid Responsive ─────────────────────────────────────── */
+@media (min-width: 1200px) {
+    #room-grid {
+        grid-template-columns: repeat(5, minmax(120px, 1fr));
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    #room-grid {
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #room-grid {
+        grid-template-columns: repeat(3, minmax(120px, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    #room-grid {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+    }
+}
+
+/* Center the schedule table on larger screens */
+@media (min-width: 992px) {
+    .schedule-wrapper {
+        display: flex;
+        /* make wrapper a flex container */
+        justify-content: center;
+        /* center its contents */
+    }
+
+    /* optional: ensure the table itself doesn’t shrink */
+    #scheduleTable {
+        width: max-content;
+        /* your intrinsic width */
+        margin: 0;
+        /* reset any default margins */
+    }
+}

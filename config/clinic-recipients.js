@@ -12,6 +12,9 @@ export const clinicEmailRecipients = {
         'bintyalper@gmail.com',
         'benjyalper@icloud.com',
         'Shoshi2602@gmail.com'
+    ],
+    nefesh: [
+        'benjyalper@hotmail'
     ]
 };
 

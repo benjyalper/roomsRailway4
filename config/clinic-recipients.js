@@ -14,7 +14,8 @@ export const clinicEmailRecipients = {
         'Shoshi2602@gmail.com'
     ],
     nefesh: [
-        'benjyalper@hotmail'
+        'benjyalper@hotmail',
+        'bintyalper@gmail.com'
     ]
 };
 

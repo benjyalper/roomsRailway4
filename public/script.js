@@ -148,6 +148,14 @@ function deleteEntry(date, room, start, end) {
     });
 }
 
+function deleteRecurring(date, room, start) {
+    return fetch('/deleteRecurring', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ selectedDate: date, roomNumber: room, startTime: start })
+    });
+}
+
 // ... the rest of your initRoomForm, messages, etc. remains unchanged ...
 
 

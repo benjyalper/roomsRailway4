@@ -122,11 +122,8 @@ function updateScheduleGrid(rows) {
                 }).then(res => {
                     if (res.isConfirmed) {
                         // delete only this one:
-                        fetch('/deleteEntry', {
-                            method: 'DELETE',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ id: r.id })
-                        }).then(fetchDataByDate);
+                        deleteEntry(r.selected_date, r.roomNumber, r.startTime, r.endTime)
+                            .then(fetchDataByDate);
                     } else if (res.isDenied) {
                         // your existing recurring‐delete logic…
                         deleteRecurring(r.selected_date, r.roomNumber, r.startTime)
@@ -147,6 +144,14 @@ function deleteEntry(date, room, start, end) {
             startTime: start,
             endTime: end
         })
+    });
+}
+
+function deleteRecurring(date, room, start) {
+    return fetch('/deleteRecurring', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ selectedDate: date, roomNumber: room, startTime: start })
     });
 }
 

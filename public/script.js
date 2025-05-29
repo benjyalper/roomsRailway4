@@ -104,27 +104,31 @@ function updateScheduleGrid(rows) {
 
         // Show the therapist’s name in the middle cell
         const $middle = $cells.eq(Math.floor($cells.length / 2));
-        $middle.html(`<div class="therapist-name">${r.names}</div>`);
+        $middle.append(`<div class="therapist-name">${r.names}</div>`);
 
         // Tooltip + click‐to‐delete
         $cells
-            .attr('title', `מטפל/ת: ${r.names}\nחדר: ${r.roomNumber}`)
-            .tooltip()
             .off('click')
             .on('click', () => {
                 Swal.fire({
-                    title: 'האם להסיר פגישה זו?',
+                    title: 'בחר פעולה',
+                    showDenyButton: true,
                     showCancelButton: true,
-                    confirmButtonText: 'כן',
-                    cancelButtonText: 'לא'
+                    confirmButtonText: 'מחק פגישה זו',
+                    denyButtonText: 'מחק את כל הפגישות הבאות',
+                    cancelButtonText: 'בטל'
                 }).then(res => {
                     if (res.isConfirmed) {
-                        deleteEntry(
-                            $('#lookupDate').val(),
-                            r.roomNumber,
-                            r.startTime,
-                            r.endTime
-                        ).then(fetchDataByDate);
+                        // delete only this one:
+                        fetch('/deleteEntry', {
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: r.id })
+                        }).then(fetchDataByDate);
+                    } else if (res.isDenied) {
+                        // your existing recurring‐delete logic…
+                        deleteRecurring(r.selected_date, r.roomNumber, r.startTime)
+                            .then(fetchDataByDate);
                     }
                 });
             });

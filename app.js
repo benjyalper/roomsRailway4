@@ -160,7 +160,7 @@ app.get('/fetchDataByDate', isAuthenticated, async (req, res) => {
             || moment().tz('Asia/Jerusalem').format('YYYY-MM-DD');
         const conn = await pool.getConnection();
         const [rows] = await conn.execute(
-            `SELECT selected_date, names, color, startTime, endTime, roomNumber
+            `SELECT id, selected_date, names, color, startTime, endTime, roomNumber
          FROM selected_dates_2_${clinic}
         WHERE selected_date = ?`,
             [date]
@@ -281,25 +281,24 @@ app.post('/submit', isAuthenticated, isAdmin, async (req, res) => {
 });
 
 // ─── DELETE BOOKING ────────────────────────────────────────────────────────────
+
 app.delete('/deleteEntry', isAuthenticated, isAdmin, async (req, res) => {
+    const { id } = req.body;
+    const clinic = req.user.clinic;
+    const conn = await pool.getConnection();
     try {
-        const { selected_date, roomNumber, startTime } = req.body;
-        const clinic = req.user.clinic;
-        const conn = await pool.getConnection();
         await conn.execute(
             `DELETE FROM selected_dates_2_${clinic}
-         WHERE selected_date = ?
-           AND roomNumber    = ?
-           AND startTime     = ?`,
-            [selected_date, roomNumber, startTime]
+         WHERE id = ?
+         LIMIT 1`,
+            [id]
         );
-        conn.release();
         res.sendStatus(200);
-    } catch (e) {
-        console.error(e);
-        res.status(500).send(e.message);
+    } finally {
+        conn.release();
     }
 });
+
 
 // ─── MESSAGES API ─────────────────────────────────────────────────────────────
 app.get('/get_last_messages', isAuthenticated, async (req, res) => {

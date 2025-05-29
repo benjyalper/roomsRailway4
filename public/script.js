@@ -103,31 +103,28 @@ function updateScheduleGrid(rows) {
         });
 
         // Show the therapist’s name in the middle cell
-        // append instead of overwrite
         const $middle = $cells.eq(Math.floor($cells.length / 2));
-        $middle.append(`<div class="therapist-name">${r.names}</div>`);
-
+        $middle.html(`<div class="therapist-name">${r.names}</div>`);
 
         // Tooltip + click‐to‐delete
         $cells
+            .attr('title', `מטפל/ת: ${r.names}\nחדר: ${r.roomNumber}`)
+            .tooltip()
             .off('click')
             .on('click', () => {
                 Swal.fire({
-                    title: 'בחר פעולה',
-                    showDenyButton: true,
+                    title: 'האם להסיר פגישה זו?',
                     showCancelButton: true,
-                    confirmButtonText: 'מחק פגישה זו',
-                    denyButtonText: 'מחק את כל הפגישות הבאות',
-                    cancelButtonText: 'בטל'
+                    confirmButtonText: 'כן',
+                    cancelButtonText: 'לא'
                 }).then(res => {
                     if (res.isConfirmed) {
-                        // delete only this one:
-                        deleteEntry(r.selected_date, r.roomNumber, r.startTime, r.endTime)
-                            .then(fetchDataByDate);
-                    } else if (res.isDenied) {
-                        // your existing recurring‐delete logic…
-                        deleteRecurring(r.selected_date, r.roomNumber, r.startTime)
-                            .then(fetchDataByDate);
+                        deleteEntry(
+                            $('#lookupDate').val(),
+                            r.roomNumber,
+                            r.startTime,
+                            r.endTime
+                        ).then(fetchDataByDate);
                     }
                 });
             });
@@ -144,14 +141,6 @@ function deleteEntry(date, room, start, end) {
             startTime: start,
             endTime: end
         })
-    });
-}
-
-function deleteRecurring(date, room, start) {
-    return fetch('/deleteRecurring', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ selectedDate: date, roomNumber: room, startTime: start })
     });
 }
 

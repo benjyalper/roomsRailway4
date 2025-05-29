@@ -160,7 +160,7 @@ app.get('/fetchDataByDate', isAuthenticated, async (req, res) => {
             || moment().tz('Asia/Jerusalem').format('YYYY-MM-DD');
         const conn = await pool.getConnection();
         const [rows] = await conn.execute(
-            `SELECT id, selected_date, names, color, startTime, endTime, roomNumber
+            `SELECT selected_date, names, color, startTime, endTime, roomNumber
          FROM selected_dates_2_${clinic}
         WHERE selected_date = ?`,
             [date]
@@ -281,48 +281,18 @@ app.post('/submit', isAuthenticated, isAdmin, async (req, res) => {
 });
 
 // ─── DELETE BOOKING ────────────────────────────────────────────────────────────
-// server.js
 app.delete('/deleteEntry', isAuthenticated, isAdmin, async (req, res) => {
-    const { id } = req.body;
-    if (!id) return res.status(400).json({ error: 'Missing id' });
-    const clinic = req.user.clinic;
-    const conn = await pool.getConnection();
     try {
-        const [result] = await conn.execute(
-            `DELETE FROM selected_dates_2_${clinic}
-         WHERE id = ?
-         LIMIT 1`,
-            [id]
-        );
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'Not found' });
-        }
-        res.json({ success: true });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: e.message });
-    } finally {
-        conn.release();
-    }
-});
-
-
-// ─── DELETE RECURRING BOOKINGS ────────────────────────────────────────────────
-app.delete('/deleteRecurring', isAuthenticated, isAdmin, async (req, res) => {
-    try {
-        const { selectedDate, roomNumber, startTime } = req.body;
+        const { selected_date, roomNumber, startTime } = req.body;
         const clinic = req.user.clinic;
         const conn = await pool.getConnection();
-
-        // Remove every booking for this room+time on-or-after the clicked date
         await conn.execute(
             `DELETE FROM selected_dates_2_${clinic}
-         WHERE roomNumber = ?
-           AND startTime  = ?
-           AND selected_date >= ?`,
-            [roomNumber, startTime, selectedDate]
+         WHERE selected_date = ?
+           AND roomNumber    = ?
+           AND startTime     = ?`,
+            [selected_date, roomNumber, startTime]
         );
-
         conn.release();
         res.sendStatus(200);
     } catch (e) {
@@ -330,8 +300,6 @@ app.delete('/deleteRecurring', isAuthenticated, isAdmin, async (req, res) => {
         res.status(500).send(e.message);
     }
 });
-
-
 
 // ─── MESSAGES API ─────────────────────────────────────────────────────────────
 app.get('/get_last_messages', isAuthenticated, async (req, res) => {

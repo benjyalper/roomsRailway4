@@ -103,8 +103,10 @@ function updateScheduleGrid(rows) {
         });
 
         // Show the therapist’s name in the middle cell
+        // append instead of overwrite
         const $middle = $cells.eq(Math.floor($cells.length / 2));
-        $middle.html(`<div class="therapist-name">${r.names}</div>`);
+        $middle.append(`<div class="therapist-name">${r.names}</div>`);
+
 
         // Tooltip + click‐to‐delete
         $cells

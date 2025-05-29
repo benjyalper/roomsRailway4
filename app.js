@@ -284,20 +284,28 @@ app.post('/submit', isAuthenticated, isAdmin, async (req, res) => {
 // server.js
 app.delete('/deleteEntry', isAuthenticated, isAdmin, async (req, res) => {
     const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'Missing id' });
     const clinic = req.user.clinic;
     const conn = await pool.getConnection();
     try {
-        await conn.execute(
+        const [result] = await conn.execute(
             `DELETE FROM selected_dates_2_${clinic}
          WHERE id = ?
          LIMIT 1`,
             [id]
         );
-        res.sendStatus(200);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Not found' });
+        }
+        res.json({ success: true });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: e.message });
     } finally {
         conn.release();
     }
 });
+
 
 // ─── DELETE RECURRING BOOKINGS ────────────────────────────────────────────────
 app.delete('/deleteRecurring', isAuthenticated, isAdmin, async (req, res) => {

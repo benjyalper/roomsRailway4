@@ -161,6 +161,9 @@ app.get('/room-schedule', isAuthenticated, (req, res) => {
 app.get('/room-form', isAuthenticated, (req, res) => {
     const rooms = clinicRooms[req.user.clinic] || [];
     const times = CLINIC_TIMES[clinic] || [];
+
+    console.log('🕒 Rendering room-form with TIMES:', times);
+
     res.render('room-form', {
         title: 'עריכת חדרים',
         rooms,
@@ -168,7 +171,7 @@ app.get('/room-form', isAuthenticated, (req, res) => {
     });
 });
 
-console.log('🕒 Rendering room-form with TIMES:', times);
+
 app.get('/messages', isAuthenticated, (req, res) =>
     res.render('messages', { title: 'הודעות' })
 );

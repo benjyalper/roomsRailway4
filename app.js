@@ -15,7 +15,7 @@ import { sendWhatsApp } from './utils/whatsapp.js'; // Import the WhatsApp funct
 import { sendMail } from './utils/mail.js';
 import { sendSMS } from './utils/sms.js';
 import { clinicEmailRecipients, clinicSmsRecipients } from './config/clinic-recipients.js';
-import { clinicRooms, TIMES as CLINIC_TIMES } from './config/clinic-rooms.js';
+import { clinicRooms, TIMES } from './config/clinic-rooms.js';
 
 
 
@@ -150,17 +150,20 @@ app.get('/home', isAuthenticated, (req, res) => {
 
 
 app.get('/room-schedule', isAuthenticated, (req, res) => {
-    const rooms = clinicRooms[req.user.clinic] || [];
+    const clinic = req.user.clinic;
+    const rooms = clinicRooms[clinic] || [];
+    const times = TIMES[clinic] || [];
+
     res.render('room-schedule', {
         title: 'טבלת חדרים',
         rooms,
-        TIMES    // if you pulled TIMES into config
+        TIMES: times
     });
 });
 
 app.get('/room-form', isAuthenticated, (req, res) => {
     const rooms = clinicRooms[req.user.clinic] || [];
-    const times = CLINIC_TIMES[clinic] || [];
+    const times = TIMES[clinic] || [];
 
     console.log('🕒 Rendering room-form with TIMES:', times);
 

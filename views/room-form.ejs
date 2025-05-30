@@ -61,11 +61,15 @@
 
         <!-- inject TIMES so script.js can populate the <select> -->
         <script>
-            // 1) render as a quoted string
-            const _timesJson = '<%= JSON.stringify(TIMES) %>';
-            // 2) attach the parsed array to window
+            // 1) Raw‐inject the JSON (no escaping)
+            const _timesJson = '<%- JSON.stringify(TIMES) %>';
+            // 2) Parse and attach as a true global
             window.TIMES = JSON.parse(_timesJson);
+
+            // sanity check in the console:
+            console.log('💡 window.TIMES =', window.TIMES);
         </script>
+
 
         <!-- your usual scripts -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>

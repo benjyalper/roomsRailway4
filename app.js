@@ -162,7 +162,8 @@ app.get('/room-schedule', isAuthenticated, (req, res) => {
 });
 
 app.get('/room-form', isAuthenticated, (req, res) => {
-    const rooms = clinicRooms[req.user.clinic] || [];
+    const clinic = req.user.clinic;
+    const rooms = clinicRooms[clinic] || [];
     const times = TIMES[clinic] || [];
 
     console.log('🕒 Rendering room-form with TIMES:', times);

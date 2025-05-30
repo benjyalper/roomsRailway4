@@ -15,6 +15,8 @@ import { sendWhatsApp } from './utils/whatsapp.js'; // Import the WhatsApp funct
 import { sendMail } from './utils/mail.js';
 import { sendSMS } from './utils/sms.js';
 import { clinicEmailRecipients, clinicSmsRecipients } from './config/clinic-recipients.js';
+import { clinicRooms, TIMES } from './config/clinic-rooms.js';
+
 
 
 
@@ -142,12 +144,20 @@ app.get('/logout', (req, res) => {
 
 // ─── PAGE ROUTES ──────────────────────────────────────────────────────────────
 app.get('/home', isAuthenticated, (req, res) => {
-    res.render('home', { title: 'סידור חדרים' });
+    const rooms = clinicRooms[req.user.clinic] || [];
+    res.render('home', { title: 'סידור חדרים', rooms });
 });
 
-app.get('/room-schedule', isAuthenticated, (req, res) =>
-    res.render('room-schedule', { title: 'טבלת חדרים' })
-);
+
+app.get('/room-schedule', isAuthenticated, (req, res) => {
+    const rooms = clinicRooms[req.user.clinic] || [];
+    res.render('room-schedule', {
+        title: 'טבלת חדרים',
+        rooms,
+        TIMES    // if you pulled TIMES into config
+    });
+});
+
 app.get('/room-form', isAuthenticated, (req, res) =>
     res.render('room-form', { title: 'עריכת חדרים' })
 );

@@ -158,9 +158,15 @@ app.get('/room-schedule', isAuthenticated, (req, res) => {
     });
 });
 
-app.get('/room-form', isAuthenticated, (req, res) =>
-    res.render('room-form', { title: 'עריכת חדרים' })
-);
+app.get('/room-form', isAuthenticated, (req, res) => {
+    const rooms = clinicRooms[req.user.clinic] || [];
+    res.render('room-form', {
+        title: 'עריכת חדרים',
+        rooms,
+        TIMES
+    });
+});
+
 app.get('/messages', isAuthenticated, (req, res) =>
     res.render('messages', { title: 'הודעות' })
 );

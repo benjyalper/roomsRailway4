@@ -61,12 +61,10 @@
 
         <!-- inject TIMES so script.js can populate the <select> -->
         <script>
-            // 1) Render the array as a JSON‐string inside quotes
-            const timesJson = '<%= JSON.stringify(TIMES) %>';
-            // 2) Parse it back into a real JS array
-            const TIMES = JSON.parse(timesJson);
-
-            // (Now you can use TIMES in script.js as usual)
+            // 1) render as a quoted string
+            const _timesJson = '<%= JSON.stringify(TIMES) %>';
+            // 2) attach the parsed array to window
+            window.TIMES = JSON.parse(_timesJson);
         </script>
 
         <!-- your usual scripts -->

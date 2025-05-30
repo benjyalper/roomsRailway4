@@ -157,8 +157,9 @@ function deleteRecurring(date, room, start) {
 
 
 function initRoomForm() {
+    console.log('initRoomForm sees window.TIMES =', window.TIMES);
     const $start = $('#startTime').empty();
-    TIMES.forEach(t => $start.append(`<option value="${t}">${t}</option>`));
+    window.TIMES.forEach(t => $start.append(`<option value="${t}">${t}</option>`));
     $start.change(updateEndTimeOptions);
     updateEndTimeOptions();
 

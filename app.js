@@ -168,6 +168,7 @@ app.get('/room-form', isAuthenticated, (req, res) => {
     });
 });
 
+console.log('🕒 Rendering room-form with TIMES:', times);
 app.get('/messages', isAuthenticated, (req, res) =>
     res.render('messages', { title: 'הודעות' })
 );

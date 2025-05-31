@@ -24,9 +24,9 @@
 
         <!-- raw output (no escaping) -->
         <script>
-            // roomsJson ends up being something like '["1","2","3",…]'
-            const roomsJson = '<%= JSON.stringify(rooms) %>';
-            window.ROOMS = JSON.parse(roomsJson);
+        // “rooms” was passed in by app.js as a template‐local
+        window.ROOMS = <%- JSON.stringify(rooms) %>;
+        console.log("⚙️ window.ROOMS =", window.ROOMS);
         </script>
 
 

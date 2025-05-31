@@ -1,6 +1,8 @@
 // script.js
 // Main JavaScript for all pages
 
+import { clinicRooms } from "../config/clinic-rooms";
+
 // const TIMES = [
 //     '07:00', '07:30', '08:00', '08:30', '09:00', '09:30',
 //     '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
@@ -40,7 +42,7 @@ function initHome() {
     const $grid = $('#room-grid').empty();
 
     // 3) Render each room from the array
-    rooms.forEach(label => {
+    clinicRooms.forEach(label => {
         $grid.append(`
       <div class="room" data-room-number="${label}">
         <div class="room-number">${label}</div>

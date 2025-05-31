@@ -123,16 +123,11 @@ function updateScheduleGrid(rows) {
     });
 }
 
-function deleteEntry(date, room, start, end) {
+function deleteEntry(id) {
     return fetch('/deleteEntry', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            selected_date: date,
-            roomNumber: room,
-            startTime: start,
-            endTime: end
-        })
+        body: JSON.stringify({ id })
     });
 }
 

@@ -63,13 +63,12 @@ const users = [
     { id: 15, phone: '0507517336', role: 'admin', clinic: 'marbah' },
     { id: 16, phone: '0528204818', role: 'admin', clinic: 'marbah' },
     { id: 17, phone: '0522261073', role: 'admin', clinic: 'marbah' },
-
-    { id: 18, phone: '0504444444', role: 'user', clinic: 'clalit' },
+    { id: 18, phone: '0504444444', role: 'user', clinic: 'marbah' },
     { id: 19, phone: '0505555522', role: 'user', clinic: 'marbah' },
     { id: 20, phone: '0524393500', role: 'admin', clinic: 'marbah' },
     { id: 21, phone: '0546718945', role: 'admin', clinic: 'marbah' },
     { id: 22, phone: '0590909090', role: 'admin', clinic: 'marbah' },
-    //demo users
+    //demo1 users
     { id: 23, phone: '0505555555', role: 'admin', clinic: 'demo1' },
     { id: 24, phone: '0502476078', role: 'admin', clinic: 'demo1' },
     { id: 25, phone: '0547515021', role: 'admin', clinic: 'demo1' },

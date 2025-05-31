@@ -10,7 +10,6 @@ export const clinicEmailRecipients = {
     demo1: [
         'benjyalper@hotmail.com',
         'bintyalper@gmail.com',
-        'benjyalper@icloud.com',
         'Shoshi2602@gmail.com'
     ],
     nefesh: [

@@ -69,6 +69,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             // Define window.TIMES so that script.js can see it:
+            // the error below is not a problem, it is saved with a syntax error (possible when in settings edit format on save is disabled)
             window.TIMES = <%- JSON.stringify(TIMES) %>;
         </script>
         <script src="/script.js"></script>

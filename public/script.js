@@ -112,8 +112,7 @@ function updateScheduleGrid(rows) {
                 }).then(res => {
                     if (res.isConfirmed) {
                         // רק הפגישה הנוכחית
-                        deleteEntry(r.selected_date, r.roomNumber, r.startTime, r.endTime)
-                            .then(fetchDataByDate);
+                        deleteEntry(r.id).then(fetchDataByDate);
                     } else if (res.isDenied) {
                         // your existing recurring‐delete logic…
                         deleteRecurring(r.selected_date, r.roomNumber, r.startTime)

@@ -1,7 +1,7 @@
 // script.js
 // Main JavaScript for all pages
 
-import { clinicRooms } from "../config/clinic-rooms";
+// import { clinicRooms } from "../config/clinic-rooms";
 
 // const TIMES = [
 //     '07:00', '07:30', '08:00', '08:30', '09:00', '09:30',

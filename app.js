@@ -144,8 +144,12 @@ app.get('/logout', (req, res) => {
 
 // ─── PAGE ROUTES ──────────────────────────────────────────────────────────────
 app.get('/home', isAuthenticated, (req, res) => {
-    const rooms = clinicRooms[req.user.clinic] || [];
-    res.render('home', { title: 'סידור חדרים', rooms });
+    const clinic = req.user.clinic;       // e.g. "marbah" or "clalit"
+    const rooms = clinicRooms[clinic] || [];
+    res.render('home', {
+        title: 'סידור חדרים',
+        rooms   // ← pass the array of room-labels into home.ejs
+    });
 });
 
 

@@ -24,9 +24,10 @@
 
         <!-- raw output (no escaping) -->
         <script>
-        // “rooms” was passed in by app.js as a template‐local
-        window.ROOMS = <%- JSON.stringify(rooms) %>;
-        console.log("⚙️ window.ROOMS =", window.ROOMS);
+            // this error isnt significant, it just means that the rooms variable is not defined in the EJS template
+            // it will be defined in the EJS template, so we can use it in the script
+            window.ROOMS = <% - JSON.stringify(rooms) %>;
+            console.log("⚙️ window.ROOMS =", window.ROOMS);
         </script>
 
 

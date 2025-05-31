@@ -35,14 +35,15 @@ function setupNavigation() {
 }
 
 function initHome() {
-    // 1) Define your rooms however you like:
-    // const rooms = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', 'מקלט'];
+    // 1) Grab the injected rooms array (fallback to []). 
+    //    window.ROOMS was set by home.ejs via <%- JSON.stringify(rooms) %>
+    const rooms = Array.isArray(window.ROOMS) ? window.ROOMS : [];
 
     // 2) Grab & clear the grid container
     const $grid = $('#room-grid').empty();
 
-    // 3) Render each room from the array
-    clinicRooms.forEach(label => {
+    // 3) Render each room‐label from the array
+    rooms.forEach(label => {
         $grid.append(`
       <div class="room" data-room-number="${label}">
         <div class="room-number">${label}</div>
@@ -50,12 +51,13 @@ function initHome() {
     `);
     });
 
-    // 4) Preserve the click behavior
+    // 4) Attach click behavior to each newly‐created .room div
     $('.room').click(function () {
         const room = $(this).data('room-number');
         window.location.href = `/room/${room}`;
     });
 }
+
 
 function initSchedule() {
     // 1) Set the date picker to today

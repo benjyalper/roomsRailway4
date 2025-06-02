@@ -147,7 +147,7 @@ app.get('/logout', (req, res) => {
 // מיפוי מפתח המרפאה לשם קריא (display name) בעברית
 const clinicDisplayNames = {
     marbah: 'מרבך ילד ונוער',
-    clalit: 'מרפאת כללית',
+    clalit: 'מרכז הפעו"ט',
     demo1: 'מרפאת ילד ונוער',
     nefesh: 'מרפאת בריאות הנפש',
     // הוסיפו כאן מיפויים נוספים לפי הצורך

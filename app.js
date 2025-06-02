@@ -72,7 +72,7 @@ const users = [
     { id: 23, phone: '0505555555', role: 'admin', clinic: 'demo1' },
     { id: 24, phone: '0502476078', role: 'admin', clinic: 'demo1' },
     { id: 25, phone: '0547515021', role: 'admin', clinic: 'demo1' },
-    //nefesh users
+    //הכחשה זה בריא
     { id: 26, phone: '0501234567', role: 'admin', clinic: 'nefesh' },
     //clalit users
     { id: 27, phone: '0501234568', role: 'admin', clinic: 'clalit' },

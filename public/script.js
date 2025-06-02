@@ -158,20 +158,59 @@ function initRoomForm() {
 
     $('#roomForm').submit(async e => {
         e.preventDefault();
-        const data = {
-            selectedDate: $('#selectedDate').val(),
-            names: $('#names').val(),
-            selectedColor: $('#selectedColor').val(),
-            startTime: $('#startTime').val(),
-            endTime: $('#endTime').val(),
-            roomNumber: $('#roomNumber').val(),
-            recurringEvent: $('#recurringEvent').is(':checked'),
-            recurringNum: $('#recurringNum').val()
-        };
 
-        // פנוי detection and message submission
-        if (data.names.trim() === "פנוי") {
-            const messageInput = `חדר ${data.roomNumber} פנוי בתאריך ${data.selectedDate} בשעות ${data.startTime} - ${data.endTime}`;
+        // 1) Read basic form values
+        const selectedDate = $('#selectedDate').val();
+        const roomNumber = $('#roomNumber').val();
+        const startTime = $('#startTime').val();
+        const endTime = $('#endTime').val();
+        const names = $('#names').val().trim();
+        const selectedColor = $('#selectedColor').val();
+        const recurringEvent = $('#recurringEvent').is(':checked');
+        const recurringNum = $('#recurringNum').val();
+
+        // 2) Load existing bookings for that date
+        let rows;
+        try {
+            const resp = await fetch(`/fetchDataByDate?date=${encodeURIComponent(selectedDate)}`, {
+                headers: { Accept: 'application/json' }
+            });
+            if (!resp.ok) throw new Error();
+            rows = await resp.json();
+        } catch {
+            return Swal.fire('שגיאה בטעינת הנתונים. נסה שוב.');
+        }
+
+        // 3) Filter only this room's bookings
+        const sameRoomBookings = (rows || []).filter(r => String(r.roomNumber) === String(roomNumber));
+
+        // 4) Check for overlap
+        const overlap = sameRoomBookings.some(r => {
+            const existStart = moment(r.startTime, "HH:mm:ss");
+            const existEnd = moment(r.endTime, "HH:mm:ss");
+            const candidateStart = moment(startTime, "HH:mm");
+            const candidateEnd = moment(endTime, "HH:mm");
+            return candidateStart.isBefore(existEnd) && candidateEnd.isAfter(existStart);
+        });
+
+        // 5) If overlap, ask “החדר תפוס בשעה זו, האם בכל זאת לבצע את ההזמנה?”
+        if (overlap) {
+            const res = await Swal.fire({
+                title: 'החדר תפוס בשעה זו, האם בכל זאת לבצע את ההזמנה?',
+                showCancelButton: true,
+                confirmButtonText: 'אישור',
+                cancelButtonText: 'ביטול'
+            });
+            if (!res.isConfirmed) {
+                // User clicked “ביטול” → do nothing
+                return;
+            }
+            // else: user clicked “אישור” → continue to submit
+        }
+
+        // 6) If names === "פנוי", send a “פנוי” message first
+        if (names === "פנוי") {
+            const messageInput = `חדר ${roomNumber} פנוי בתאריך ${selectedDate} בשעות ${startTime} - ${endTime}`;
             await fetch('/submit_message', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -179,18 +218,33 @@ function initRoomForm() {
             });
         }
 
-        await fetch('/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
+        // 7) Finally, post to /submit
+        const payload = {
+            selectedDate,
+            names,
+            selectedColor,
+            startTime,
+            endTime,
+            roomNumber,
+            recurringEvent,
+            recurringNum
+        };
 
-        Swal.fire('נשמר!', '', 'success');
-        $('#roomForm')[0].reset();
-        updateEndTimeOptions();
+        try {
+            await fetch('/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            Swal.fire('נשמר!', '', 'success');
+            $('#roomForm')[0].reset();
+            updateEndTimeOptions();
+        } catch {
+            Swal.fire('שגיאה בשמירה. נסה שוב.');
+        }
     });
-
 }
+
 
 function updateEndTimeOptions() {
     const s = $('#startTime').val();

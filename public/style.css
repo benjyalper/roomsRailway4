@@ -79,7 +79,10 @@ body {
     /* same as var(--sea-deep) but 0.8 alpha */
 
     text-align: center;
-    padding: 0.5rem 0;
+    padding-top: 0;
+    padding-bottom: 0.5rem;
+    padding-left: 0;
+    padding-right: 0;
     /* some vertical spacing */
     margin-top: 0;
     /* if you need extra spacing, tweak here */

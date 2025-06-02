@@ -75,7 +75,9 @@ const users = [
     //nefesh users
     { id: 26, phone: '0501234567', role: 'admin', clinic: 'nefesh' },
     //clalit users
-    { id: 27, phone: '0501234568', role: 'admin', clinic: 'clalit' }
+    { id: 27, phone: '0501234568', role: 'admin', clinic: 'clalit' },
+    //לירון קדשאי
+    { id: 28, phone: '0508557154', role: 'admin', clinic: 'clalit' },
 ];
 
 // ─── PASSPORT LOCAL STRATEGY (PHONE ONLY) ───────────────────────────────────
